@@ -1,37 +1,27 @@
 from typing import List, Tuple
 
 global V
-V = 4
 
-def floyd_warshall(dist: List[List[int]], n: int):
+def floyd_warshall(dist: List[List[int]]):
+    pi = [['NIL'] * V for u in range(V)]
+    INF = 999
 
-    pi = [[ 'NIL' ] * n for i in range(n)]
-
-    for i in range(n):
-        for j in range(n):
-
-            if dist[i][j] == 0 or dist[i][j] == 999:
-                continue
-
-            if dist[i][j] != 999:
-                pi[i][j] = i
-
-    for k in range(n):
-        for i in range(n):
-            for j in range(n):
-
+    for u in range(V):
+        for v in range(V):
+            if 0 < dist[u][v] < INF:
+                pi[u][v] = u
+    
+    for k in range(V):
+        for i in range(V):
+            for j in range(V):
                 if dist[i][j] > dist[i][k] + dist[k][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
                     pi[i][j] = pi[k][j]
     
-    for row in dist:
-        print(" ".join(map(str, row)))
-    
     def reconstructed_path(pi: List[List[int]], start: int, end: int):
-
         if pi[start][end] == 'NIL':
             return [ start ] if start == end else None
-
+        
         path = [ end ]
         while end != start:
             end = pi[start][end]
@@ -46,18 +36,18 @@ def floyd_warshall(dist: List[List[int]], n: int):
                 print(path[i])
             else:
                 print(path[i], end=" -> ")
-    
-    print("\nShortest paths between every pair of vertices:")
-    for i in range(n):
-        for j in range(n):
-            
-            if i == j:
-                continue
-            
-            print(f"Shortest path from node {i} to node {j}: ", end="")
-            reconstructed_path(pi, i, j)
+
+    print("Shortest path from every pair of vertices:-")
+    for u in range(V):
+        for v in range(V):
+            if 0 < dist[u][v] < INF:
+                print(f"Shortest path from {u} to {v}: ", end=" ")
+                reconstructed_path(pi, u, v)
                 
 if __name__ == '__main__':
 
+    V = int(input("Enter the number of vertices:-"))
+    print("Enter the values for adjacency matrix:-")
     graph = [ list(map(int, input().split())) for i in range(V) ]
-    floyd_warshall(graph, V)
+
+    floyd_warshall(graph)
