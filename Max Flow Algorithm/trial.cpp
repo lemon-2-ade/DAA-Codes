@@ -60,7 +60,7 @@ int findMaxFlow (int** graph, int source, int sink) {
             int v = parent[v];
         }   // for obtaining the bottleneck value
 
-        int v = sink;
+        v = sink;
         while (v != source) {
             int u = parent[v];
             residualGraph[u][v] -= pathFlow;
